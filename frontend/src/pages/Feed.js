@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import api from '../services/api';
 
 import './Feed.css';
 
@@ -8,61 +9,47 @@ import comment from '../assets/comment.svg';
 import send from '../assets/send.svg';
 
 class Feed extends Component {
+
+    state = {
+        feed: []
+    };
+
+    async componentDidMount() {
+        const response = await api.get('posts');
+        this.setState({ feed: response.data });
+    }
+
     render() {
         return (
             <section id="post-list">
-                <article>
-                    <header>
-                        <div className="user-info">
-                            <span>Anderson Aristides</span>
-                            <span className="place">Curitiba</span>
-                        </div>
-                        <img src={more} alt="Mais" />
-                    </header>
+                { this.state.feed.map(post => (
+                    <article key={post._id}>
+                        <header>
+                            <div className="user-info">
+                                <span>{post.author}</span>
+                                <span className="place">{post.place}</span>
+                            </div>
+                            <img src={more} alt="Mais" />
+                        </header>
 
-                    <img src="http://localhost:3333/files/giulia_costa_-003.jpg" alt="Giulia Costa" />
-               
-                    <footer>
-                        <div className="actions">
-                            <img src={like} alt="" />
-                            <img src={comment} alt="" />
-                            <img src={send} alt="" />
-                        </div>
+                        <img src={`http://localhost:3333/files/${post.image}`} alt="" />
+                
+                        <footer>
+                            <div className="actions">
+                                <img src={like} alt="" />
+                                <img src={comment} alt="" />
+                                <img src={send} alt="" />
+                            </div>
 
-                        <strong>900 curtidas</strong>
+                            <strong>{post.likes} curtidas</strong>
 
-                        <p>
-                            Um post muito massa da Giulia Costa!
-                            <span>#giulia #bunda #top</span>
-                        </p>
-                    </footer>               
-                </article>
-                <article>
-                    <header>
-                        <div className="user-info">
-                            <span>Anderson Aristides</span>
-                            <span className="place">Curitiba</span>
-                        </div>
-                        <img src={more} alt="Mais" />
-                    </header>
-
-                    <img src="http://localhost:3333/files/giulia_costa_-003.jpg" alt="Giulia Costa" />
-               
-                    <footer>
-                        <div className="actions">
-                            <img src={like} alt="" />
-                            <img src={comment} alt="" />
-                            <img src={send} alt="" />
-                        </div>
-
-                        <strong>900 curtidas</strong>
-
-                        <p>
-                            Um post muito massa da Giulia Costa!
-                            <span>#giulia #bunda #top</span>
-                        </p>
-                    </footer>               
-                </article>
+                            <p>
+                                {post.description}
+                                <span>{post.hashtags}</span>
+                            </p>
+                        </footer>               
+                    </article>
+                )) }
             </section>
         );
     }
