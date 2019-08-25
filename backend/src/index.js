@@ -7,7 +7,7 @@ const app = express()
 const server = require('http').Server(app)
 const io = require('socket.io')(server)
 
-mongoose.connect('mongodb+srv://makersweb:makersweb@cluster0-4rkx7.mongodb.net/test?retryWrites=true&w=majority', {
+mongoose.connect('{url_bd_mongo}', {
     useNewUrlParser: true
 })
 
